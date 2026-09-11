@@ -15,6 +15,8 @@ Users often struggle to identify phishing, scam, and fake emails. Suspicious lin
 ### Possible Solutions:
 An AI-powered email threat detection platform that analyses emails, highlights potential risks, and presents the results through a simple and easy-to-understand interface. It will help users identify threats, recover important emails from spam, and manage unwanted emails more effectively.
 
+### Implementation:
+Using agentic coding with Google Antigravity, we developed the proposed solution into a fully functional web application. The project was generated, implemented, and tested through the agentic coding workflow, resulting in a working application that can be run locally through a localhost link and used to interact with the implemented features.
 
 1. Login Page
    <img width="954" height="508" alt="image" src="https://github.com/user-attachments/assets/b22ae231-cf66-4296-b67a-a15f92ba923e" />
