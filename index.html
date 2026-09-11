@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thadam Labs – AI-Powered Email Threat Detection</title>
+    <meta name="description" content="Thadam Labs is an advanced cybersecurity platform that analyzes incoming emails for phishing, malicious links, repeated spam, and recovers important emails.">
+
+    <!-- Google Fonts: Inter & Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Application Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     LOGIN PAGE
+===================================================== -->
+<div id="loginPage" class="login-page">
+    <div class="login-container">
+        <div class="login-top">
+            <span class="hamburger" onclick="showToast('Thadam Labs Security Portal v2.4')">☰</span>
+            <span class="nav-info-link" onclick="showLoginAbout()">About</span>
+            <span class="nav-info-link" onclick="showLoginFeatures()">Features</span>
+        </div>
+
+        <div class="brand">
+            <h1>Thadam Labs</h1>
+            <p>
+                AI-Powered Email<br>
+                Threat Detection
+            </p>
+        </div>
+
+        <div class="login-heading-pill">
+            Login Page
+        </div>
+
+        <div class="login-box">
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" novalidate>
+                <div class="input-group">
+                    <label for="username">UserName:</label>
+                    <input
+                        type="email"
+                        id="username"
+                        placeholder="Enter your email"
+                        value="analyst@thadamlabs.com"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password:</label>
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            value="CyberSecurity2026!"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <span
+                            class="eye"
+                            id="passwordEyeBtn"
+                            onclick="togglePassword()"
+                            title="Toggle password visibility"
+                            aria-label="Toggle password visibility"
+                        >
+                            <i class="fa-regular fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="login-actions-row">
+                    <a href="#" class="forgot" onclick="forgotPassword(event)">
+                        Forgot Password?
+                    </a>
+                </div>
+
+                <div id="loginValidationMsg" class="validation-msg hidden"></div>
+
+                <button type="submit" class="signin-btn" id="signInBtn">
+                    Sign in
+                </button>
+
+                <p class="create-account">
+                    Don't have an account?
+                    <a href="#" onclick="createAccount(event)">
+                        Create Account
+                    </a>
+                </p>
+            </form>
+        </div>
+
+        <div class="login-footer">
+            Stay ahead of threats.<br>
+            Keep your inbox safe.
+        </div>
+    </div>
+</div>
+
+
+<!-- =====================================================
+     MAIN APPLICATION (AFTER LOGIN)
+===================================================== -->
+<div id="app" class="app hidden">
+
+    <!-- Mobile Drawer Backdrop -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="hamburger mobile-only" onclick="toggleSidebar(false)">☰</span>
+            <span class="brand-title-small"><i class="fa-solid fa-shield-halved"></i> Thadam Labs</span>
+            <span class="home-icon" onclick="showPage('dashboard')" title="Home shortcut"><i class="fa-solid fa-house"></i></span>
+        </div>
+
+        <div class="sidebar-brand">
+            <h2>Thadam Labs</h2>
+            <p>AI-Powered Email Security</p>
+        </div>
+
+        <nav class="navigation" id="mainNavigation" aria-label="Main Navigation">
+            <a href="#" class="nav-item active" data-page="dashboard" onclick="showPage('dashboard'); return false;">
+                <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+                <span class="nav-text">Home</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="inbox" onclick="showPage('inbox'); return false;">
+                <span class="nav-icon"><i class="fa-solid fa-envelope"></i></span>
+                <span class="nav-text">Inbox</span>
+                <span class="nav-badge" id="badgeInbox">0</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="threats" onclick="showPage('threats'); return false;">
+                <span class="nav-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                <span class="nav-text">Threats</span>
+                <span class="nav-badge badge-threat" id="badgeThreats">0</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="spam" onclick="showPage('spam'); return false;">
+                <span class="nav-icon"><i class="fa-solid fa-ban"></i></span>
+                <span class="nav-text">Spam</span>
+                <span class="nav-badge badge-spam" id="badgeSpam">0</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="important" onclick="showPage('important'); return false;">
+                <span class="nav-icon"><i class="fa-solid fa-star"></i></span>
+                <span class="nav-text">Important</span>
+                <span class="nav-badge badge-important" id="badgeImportant">0</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="reports" onclick="showPage('reports'); return false;">
+                <span class="nav-icon"><i class="fa-solid fa-chart-pie"></i></span>
+                <span class="nav-text">Reports</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="#" class="bottom-item" onclick="openSettingsModal(); return false;">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+
+            <a href="#" class="bottom-item" onclick="openProfileModal(); return false;">
+                <i class="fa-solid fa-user-shield"></i> Profile
+            </a>
+
+            <a href="#" class="bottom-item logout-link" onclick="logoutUser(); return false;">
+                <i class="fa-solid fa-right-from-bracket"></i> Log out
+            </a>
+        </div>
+    </aside>
+
+
+    <!-- =================================================
+         MAIN CONTENT AREA
+    ================================================== -->
+    <main class="main-content" id="mainContent">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                    onclick="toggleSidebar()"
+                    aria-label="Toggle Navigation Menu"
+                >
+                    ☰
+                </button>
+                <h1 id="pageTitle" class="page-title-header">
+                    Dashboard
+                </h1>
+            </div>
+
+            <div class="top-icons">
+                <div class="notification-wrapper">
+                    <button
+                        class="icon-btn"
+                        id="notifBellBtn"
+                        title="Security Notifications"
+                        onclick="toggleNotificationDropdown()"
+                        aria-label="Notifications"
+                    >
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notif-dot" id="notifDot"></span>
+                    </button>
+
+                    <!-- Notifications Dropdown -->
+                    <div id="notificationDropdown" class="notification-dropdown hidden">
+                        <div class="notif-dropdown-header">
+                            <span><i class="fa-solid fa-shield-halved"></i> Security Alerts</span>
+                            <button class="clear-notif-btn" onclick="clearNotifications()">Clear</button>
+                        </div>
+                        <div class="notif-list" id="notificationList">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    class="icon-btn"
+                    title="Go to Dashboard"
+                    onclick="showPage('dashboard')"
+                    aria-label="Home"
+                >
+                    <i class="fa-solid fa-house"></i>
+                </button>
+            </div>
+        </header>
+
+
+        <!-- =================================================
+             PAGE 1: DASHBOARD
+        ================================================== -->
+        <section id="dashboard" class="page active-page">
+            <div class="page-intro">
+                <h2>Dashboard</h2>
+                <p>Your email security overview</p>
+            </div>
+
+            <!-- Scan an Email Hero Card -->
+            <div class="scan-card">
+                <div class="scan-icon-wrapper">
+                    <i class="fa-regular fa-envelope scan-main-icon"></i>
+                </div>
+                <h3>Scan an Email</h3>
+                <p>
+                    Analyse an email for<br>
+                    possible threats
+                </p>
+                <button
+                    class="pill-btn primary-btn"
+                    id="dashboardScanBtn"
+                    onclick="showPage('analysis')"
+                >
+                    Scan Email
+                </button>
+            </div>
+
+            <!-- Statistics Grid (4 Cards) -->
+            <div class="stats-grid">
+                <div class="stat-card" onclick="showPage('analysis')" title="Click to analyze emails">
+                    <strong id="analysedCount">128</strong>
+                    <span>Emails Analyzed</span>
+                </div>
+
+                <div class="stat-card stat-threats" onclick="showPage('threats')" title="View threats">
+                    <strong id="threatCount">12</strong>
+                    <span>Threats</span>
+                </div>
+
+                <div class="stat-card stat-spam" onclick="showPage('spam')" title="View spam">
+                    <strong id="spamCount">46</strong>
+                    <span>Spam</span>
+                </div>
+
+                <div class="stat-card stat-important" onclick="showPage('important')" title="View important emails">
+                    <strong id="importantCount">18</strong>
+                    <span>Important</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Important Emails Preview Card -->
+            <div class="dashboard-important">
+                <div class="dashboard-important-header">
+                    <h3>☆ Important Emails:</h3>
+                </div>
+
+                <div id="dashboardImportantList" class="dashboard-important-items">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <a
+                    href="#"
+                    class="view-all-link"
+                    onclick="showPage('important'); return false;"
+                >
+                    View all →
+                </a>
+            </div>
+        </section>
+
+
+        <!-- =================================================
+             PAGE 2: EMAIL ANALYSIS
+        ================================================== -->
+        <section id="analysis" class="page">
+            <div class="page-intro">
+                <h2>Email Analysis</h2>
+                <p>Analyse an email for possible threats</p>
+            </div>
+
+            <div class="upload-card">
+                <div class="upload-icon-wrapper">
+                    <i class="fa-solid fa-cloud-arrow-up upload-main-icon"></i>
+                </div>
+
+                <h3>Upload Email</h3>
+                <p>Upload an email file to analyse (.eml, .txt, .msg)</p>
+
+                <div class="file-upload-container">
+                    <label class="upload-btn" for="emailFile">
+                        <i class="fa-solid fa-paperclip"></i> Upload
+                    </label>
+                    <input
+                        type="file"
+                        id="emailFile"
+                        accept=".eml,.txt,.msg"
+                        onchange="handleFileUpload(event)"
+                    >
+                    <span id="uploadedFileName" class="uploaded-filename-tag hidden"></span>
+                </div>
+
+                <span class="or-divider">OR</span>
+
+                <!-- Quick Sample Chips for Fast Testing -->
+                <div class="sample-chips-row">
+                    <span class="chips-label">Try sample:</span>
+                    <button type="button" class="chip-btn chip-phish" onclick="loadSampleEmail('phishing')">Phishing Alert</button>
+                    <button type="button" class="chip-btn chip-spam" onclick="loadSampleEmail('spam')">Reward Spam</button>
+                    <button type="button" class="chip-btn chip-important" onclick="loadSampleEmail('internship')">Internship Notice</button>
+                    <button type="button" class="chip-btn chip-safe" onclick="loadSampleEmail('safe')">Team Meeting</button>
+                </div>
+
+                <div class="textarea-wrapper">
+                    <textarea
+                        id="emailContent"
+                        placeholder="Paste your raw email content here (e.g. From, Subject, body text, or links)..."
+                        rows="6"
+                    ></textarea>
+                </div>
+
+                <!-- Live Loading State Indicator -->
+                <div id="analysisLoadingIndicator" class="analysis-loading-box hidden">
+                    <div class="cyber-spinner"></div>
+                    <p id="analysisLoadingText" class="analysis-loading-text">
+                        Scanning headers &amp; domain reputation...
+                    </p>
+                    <div class="progress-bar-track">
+                        <div id="analysisProgressBar" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+
+                <button
+                    class="pill-btn primary-btn analyse-submit-btn"
+                    id="runAnalysisBtn"
+                    onclick="triggerEmailAnalysis()"
+                >
+                    <i class="fa-solid fa-shield-virus"></i> Analyse Email
+                </button>
+            </div>
+        </section>
+
+
+        <!-- =================================================
+             PAGE 3: THREAT RESULT
+        ================================================== -->
+        <section id="threatResult" class="page">
+            <div class="page-intro">
+                <h2>Threat Result</h2>
+                <p>Detailed security diagnostic and mitigation options</p>
+            </div>
+
+            <div class="threat-result-card" id="threatResultCard">
+                <!-- Result Heading -->
+                <div class="result-heading" id="resultHeading">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span id="resultHeadingText">Suspicious Email</span>
+                </div>
+
+                <p class="result-description" id="resultDescription">
+                    This email may be unsafe
+                </p>
+
+                <!-- Risk Box -->
+                <div class="risk-box" id="resultRiskBox">
+                    <span class="risk-level-badge" id="resultRiskLevelBadge">HIGH RISK</span>
+                    <strong class="risk-score-value" id="resultRiskScoreValue">78/100</strong>
+                    <small class="risk-score-label">Threat Score</small>
+                </div>
+
+                <!-- Email Details -->
+                <div class="email-details" id="resultEmailDetails">
+                    <h3>Email Details</h3>
+                    <div class="detail-row">
+                        <b>From:</b>
+                        <span id="resultSenderText">unknown.sender@gmail.com</span>
+                    </div>
+                    <div class="detail-row">
+                        <b>Subject:</b>
+                        <span id="resultSubjectText">Your account requires verification</span>
+                    </div>
+                    <div class="detail-row">
+                        <b>Category:</b>
+                        <span id="resultCategoryText" class="category-tag">SUSPICIOUS</span>
+                    </div>
+                </div>
+
+                <!-- Why Flagged Section -->
+                <div class="flag-reasons">
+                    <h3>Why was this flagged?</h3>
+                    <div id="resultReasonsList" class="reasons-container">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Five Comprehensive Actions Required by Specification -->
+                <div class="threat-actions-grid">
+                    <button class="threat-action-btn btn-spam" onclick="actionFromThreatResult('reportSpam')" title="Move to Spam">
+                        <i class="fa-solid fa-ban"></i> Report Spam
+                    </button>
+                    <button class="threat-action-btn btn-block" onclick="actionFromThreatResult('blockSender')" title="Block this sender permanently">
+                        <i class="fa-solid fa-user-slash"></i> Block Sender
+                    </button>
+                    <button class="threat-action-btn btn-inbox" onclick="actionFromThreatResult('moveToInbox')" title="Move to Inbox">
+                        <i class="fa-solid fa-inbox"></i> Move to Inbox
+                    </button>
+                    <button class="threat-action-btn btn-safe" onclick="actionFromThreatResult('markSafe')" title="Classify as safe and move to Inbox">
+                        <i class="fa-solid fa-circle-check"></i> Mark Safe
+                    </button>
+                    <button class="threat-action-btn btn-delete" onclick="actionFromThreatResult('deleteEmail')" title="Delete permanently">
+                        <i class="fa-solid fa-trash"></i> Delete Email
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =================================================
+             PAGE 4: INBOX
+        ================================================== -->
+        <section id="inbox" class="page">
+            <div class="page-intro">
+                <h2>Inbox</h2>
+                <p>Your recent emails</p>
+            </div>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input
+                    type="text"
+                    id="inboxSearchInput"
+                    placeholder="Search emails by sender, subject, content, category..."
+                    oninput="handleSearch('inbox', this.value)"
+                >
+                <button class="clear-search-btn" onclick="clearSearch('inbox')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="mailbox-toolbar">
+                <span class="mailbox-count" id="inboxCountText">0 emails</span>
+                <div class="mailbox-quick-actions">
+                    <button class="quick-link-btn" onclick="showPage('analysis')"><i class="fa-solid fa-plus"></i> Scan New</button>
+                </div>
+            </div>
+
+            <div class="email-list" id="inboxList">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+
+
+        <!-- =================================================
+             PAGE 5: SPAM
+        ================================================== -->
+        <section id="spam" class="page">
+            <div class="page-intro">
+                <h2>Spam</h2>
+                <p>Emails identified as unwanted</p>
+            </div>
+
+            <!-- Repeated Spam Banner if detected -->
+            <div id="repeatedSpamGlobalBanner" class="repeated-spam-alert-banner hidden">
+                <div class="banner-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="banner-content">
+                    <strong>Repeated Unwanted Senders Detected</strong>
+                    <p id="repeatedSpamBannerText">One or more senders have sent 3+ unwanted emails.</p>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input
+                    type="text"
+                    id="spamSearchInput"
+                    placeholder="Search spam emails..."
+                    oninput="handleSearch('spam', this.value)"
+                >
+                <button class="clear-search-btn" onclick="clearSearch('spam')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="mailbox-toolbar">
+                <span class="mailbox-count" id="spamCountText">0 spam emails</span>
+            </div>
+
+            <div class="email-list" id="spamList">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+
+
+        <!-- =================================================
+             PAGE 6: THREATS
+        ================================================== -->
+        <section id="threats" class="page">
+            <div class="page-intro">
+                <h2>Threats</h2>
+                <p>Potentially harmful emails detected</p>
+            </div>
+
+            <!-- Threat Summary Card matching prototype -->
+            <div class="threat-summary">
+                <strong id="threatSummaryTotal">12 Threats Detected</strong>
+                <div id="threatSummaryBreakdown">
+                    <span class="threat-badge-pill high-pill" id="threatCountHigh">4 High</span> &nbsp;
+                    <span class="threat-badge-pill med-pill" id="threatCountMed">5 Medium</span> &nbsp;
+                    <span class="threat-badge-pill low-pill" id="threatCountLow">3 Low</span>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input
+                    type="text"
+                    id="threatsSearchInput"
+                    placeholder="Search threats by sender, title, reasons..."
+                    oninput="handleSearch('threats', this.value)"
+                >
+                <button class="clear-search-btn" onclick="clearSearch('threats')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="threat-list" id="threatList">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+
+
+        <!-- =================================================
+             PAGE 7: IMPORTANT EMAILS
+        ================================================== -->
+        <section id="important" class="page">
+            <div class="page-intro">
+                <h2>Important Emails</h2>
+                <p>Emails that may need your attention</p>
+            </div>
+
+            <!-- Header Badge matching prototype: "3 important emails found in Spam" -->
+            <div class="important-count" id="importantFoundInSpamNotice">
+                3 important emails found in Spam
+            </div>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input
+                    type="text"
+                    id="importantSearchInput"
+                    placeholder="Search important emails..."
+                    oninput="handleSearch('important', this.value)"
+                >
+                <button class="clear-search-btn" onclick="clearSearch('important')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="email-list" id="importantList">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+
+
+        <!-- =================================================
+             PAGE 8: REPORTS
+        ================================================== -->
+        <section id="reports" class="page">
+            <div class="page-intro">
+                <h2>Reports</h2>
+                <p>Email security analysis overview</p>
+            </div>
+
+            <div class="report-card">
+                <h3>Security Report</h3>
+
+                <div class="report-row">
+                    <span>Total Emails Analysed</span>
+                    <strong id="reportAnalysed">128</strong>
+                </div>
+
+                <div class="report-row">
+                    <span>Threats Detected</span>
+                    <strong id="reportThreats">12</strong>
+                </div>
+
+                <div class="report-row">
+                    <span>Spam Emails</span>
+                    <strong id="reportSpam">46</strong>
+                </div>
+
+                <div class="report-row">
+                    <span>Important Emails</span>
+                    <strong id="reportImportant">18</strong>
+                </div>
+
+                <div class="report-row">
+                    <span>Blocked Senders</span>
+                    <strong id="reportBlockedSenders">0</strong>
+                </div>
+
+                <div class="report-row">
+                    <span>System Threat Posture</span>
+                    <strong id="reportPosture" class="posture-good">Protected</strong>
+                </div>
+
+                <!-- Risk Distribution Bar -->
+                <div class="report-bar-section">
+                    <span class="bar-title">Risk Distribution</span>
+                    <div class="composite-progress-bar">
+                        <div class="bar-slice safe-slice" id="barSliceSafe" title="Safe" style="width: 55%"></div>
+                        <div class="bar-slice spam-slice" id="barSliceSpam" title="Spam" style="width: 25%"></div>
+                        <div class="bar-slice susp-slice" id="barSliceSusp" title="Suspicious" style="width: 12%"></div>
+                        <div class="bar-slice harm-slice" id="barSliceHarm" title="Harmful" style="width: 8%"></div>
+                    </div>
+                    <div class="bar-legend">
+                        <span><i class="legend-dot green"></i> Safe</span>
+                        <span><i class="legend-dot orange"></i> Spam</span>
+                        <span><i class="legend-dot yellow"></i> Suspicious</span>
+                        <span><i class="legend-dot red"></i> Harmful</span>
+                    </div>
+                </div>
+
+                <button
+                    class="pill-btn primary-btn report-btn"
+                    onclick="generateSecurityReport()"
+                >
+                    <i class="fa-solid fa-file-shield"></i> Generate Report
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =====================================================
+     EMAIL DETAIL INSPECTOR MODAL
+===================================================== -->
+<div id="emailDetailModal" class="modal-overlay hidden" onclick="closeEmailModal(event)">
+    <div class="modal-dialog email-modal-card" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title-row">
+                <span id="modalCategoryBadge" class="category-badge">SAFE</span>
+                <h3 id="modalSubject">Email Details</h3>
+            </div>
+            <button class="close-modal-btn" onclick="closeEmailModal()">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="modal-meta-grid">
+                <div>
+                    <label>From:</label>
+                    <span id="modalFrom">sender@example.com</span>
+                </div>
+                <div>
+                    <label>Date:</label>
+                    <span id="modalDate">Today</span>
+                </div>
+                <div>
+                    <label>Status:</label>
+                    <span id="modalFolder">Inbox</span>
+                </div>
+                <div>
+                    <label>Threat Score:</label>
+                    <span id="modalScore" class="score-pill">0 / 100</span>
+                </div>
+            </div>
+
+            <!-- Repeated spam warning inside modal if applicable -->
+            <div id="modalRepeatedSpamAlert" class="repeated-spam-callout hidden">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Repeated unwanted sender – This sender has sent 3+ unwanted emails.</span>
+            </div>
+
+            <div class="modal-reasons-block" id="modalReasonsBlock">
+                <label>Security Diagnostics:</label>
+                <ul id="modalReasonsList">
+                    <!-- Reasons -->
+                </ul>
+            </div>
+
+            <div class="modal-body-content">
+                <label>Message Content:</label>
+                <div id="modalBodyText" class="email-body-rendered">
+                    <!-- Body text -->
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-actions" id="modalActionsToolbar">
+            <!-- Populated dynamically depending on current folder -->
+        </div>
+    </div>
+</div>
+
+
+<!-- =====================================================
+     SETTINGS MODAL
+===================================================== -->
+<div id="settingsModal" class="modal-overlay hidden" onclick="closeSettingsModal(event)">
+    <div class="modal-dialog settings-modal-card" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-gear"></i> System Settings</h3>
+            <button class="close-modal-btn" onclick="closeSettingsModal()">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <section class="settings-section">
+                <h4><i class="fa-solid fa-user-slash"></i> Blocked Senders List</h4>
+                <p class="section-desc">Emails from these addresses are automatically categorized as spam threats.</p>
+                <div id="blockedSendersList" class="blocked-senders-container">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h4><i class="fa-solid fa-sliders"></i> Threat Engine Sensitivity</h4>
+                <p class="section-desc">Configure heuristic rule-based detection parameters.</p>
+                <div class="settings-toggle-row">
+                    <span>Aggressive Link Domain Inspection</span>
+                    <label class="switch">
+                        <input type="checkbox" id="settingAggressiveLinks" checked onchange="saveUserSettings()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="settings-toggle-row">
+                    <span>Spam Trap Keyword Recovery</span>
+                    <label class="switch">
+                        <input type="checkbox" id="settingKeywordRecovery" checked onchange="saveUserSettings()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </section>
+
+            <section class="settings-section danger-zone">
+                <h4><i class="fa-solid fa-rotate-left"></i> Demo Data Management</h4>
+                <p class="section-desc">Restore factory sample emails or clear local state.</p>
+                <div class="danger-btn-row">
+                    <button class="secondary-btn" onclick="resetToDefaultData()">
+                        <i class="fa-solid fa-arrows-rotate"></i> Reset Demo Data
+                    </button>
+                    <button class="danger-btn" onclick="clearAllData()">
+                        <i class="fa-solid fa-trash-can"></i> Clear All Storage
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<!-- =====================================================
+     PROFILE MODAL
+===================================================== -->
+<div id="profileModal" class="modal-overlay hidden" onclick="closeProfileModal(event)">
+    <div class="modal-dialog profile-modal-card" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-id-badge"></i> User Profile</h3>
+            <button class="close-modal-btn" onclick="closeProfileModal()">&times;</button>
+        </div>
+
+        <div class="modal-body profile-body">
+            <div class="profile-avatar-circle">
+                <i class="fa-solid fa-user-astronaut"></i>
+            </div>
+            <h4 id="profileDisplayName">Cyber Defense Analyst</h4>
+            <p id="profileEmail" class="profile-email-sub">analyst@thadamlabs.com</p>
+
+            <div class="profile-info-grid">
+                <div class="info-pill">
+                    <small>Security Tier</small>
+                    <strong>SOC Level 2</strong>
+                </div>
+                <div class="info-pill">
+                    <small>Engine Mode</small>
+                    <strong>Heuristic AI</strong>
+                </div>
+                <div class="info-pill">
+                    <small>Organization</small>
+                    <strong>Thadam Labs</strong>
+                </div>
+                <div class="info-pill">
+                    <small>Status</small>
+                    <strong class="status-active-text"><i class="fa-solid fa-circle"></i> Active</strong>
+                </div>
+            </div>
+
+            <button class="pill-btn primary-btn logout-modal-btn" onclick="closeProfileModal(); logoutUser();">
+                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- =====================================================
+     FLOATING TOAST CONTAINER
+===================================================== -->
+<div id="toast" class="toast-notification" role="status" aria-live="polite"></div>
+
+
+<!-- =====================================================
+     JAVASCRIPT LOGIC
+===================================================== -->
+<script src="script.js"></script>
+
+</body>
+</html>
