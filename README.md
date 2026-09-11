@@ -18,6 +18,11 @@ An AI-powered email threat detection platform that analyses emails, highlights p
 ### Implementation:
 Using agentic coding with Google Antigravity, we developed the proposed solution into a fully functional web application. The project was generated, implemented, and tested through the agentic coding workflow, resulting in a working application that can be run locally through a localhost link and used to interact with the implemented features.
 
+
+### Application Screenshots
+The following screenshots showcase the key screens and features of the fully functional Mail Hunt application, developed using agentic coding with Google Antigravity and tested locally through a localhost environment.
+
+
 1. Login Page
    <img width="954" height="508" alt="image" src="https://github.com/user-attachments/assets/b22ae231-cf66-4296-b67a-a15f92ba923e" />
 
